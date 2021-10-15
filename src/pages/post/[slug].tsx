@@ -6,7 +6,7 @@ import ptBR from 'date-fns/locale/pt-BR';
 import { RichText } from 'prismic-dom';
 import { FiCalendar, FiUser, FiClock } from 'react-icons/fi';
 import { useRouter } from 'next/router';
-import { Header } from '../../components/Header';
+import Header from '../../components/Header';
 
 import { getPrismicClient } from '../../services/prismic';
 

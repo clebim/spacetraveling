@@ -6,7 +6,7 @@ import Prismic from '@prismicio/client';
 import { format } from 'date-fns';
 import ptBR from 'date-fns/locale/pt-BR';
 import { useState } from 'react';
-import { Header } from '../components/Header';
+import Header from '../components/Header';
 import { getPrismicClient } from '../services/prismic';
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
@@ -34,7 +34,20 @@ interface HomeProps {
 export default function Home({ postsPagination }: HomeProps): JSX.Element {
   const { results, next_page } = postsPagination;
 
-  const [posts, setPosts] = useState<Post[]>(results);
+  const formattedPosts = results.map(post => {
+    return {
+      ...post,
+      first_publication_date: format(
+        new Date(post.first_publication_date),
+        'dd MMM yyyy',
+        {
+          locale: ptBR,
+        }
+      ),
+    };
+  });
+
+  const [posts, setPosts] = useState<Post[]>(formattedPosts);
   const [nextPage, setNextPage] = useState(next_page);
 
   const handleLoadPosts = (): void => {
@@ -46,7 +59,7 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
       .then(async response => {
         const json = await response.json();
 
-        const formattedPosts: Post[] = json.results.map(result => {
+        const formatted: Post[] = json.results.map(result => {
           return {
             id: result.id,
             uid: result.uid,
@@ -66,7 +79,7 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
         });
 
         setNextPage(json.next_page);
-        setPosts([...posts, ...formattedPosts]);
+        setPosts([...posts, ...formatted]);
       })
       // eslint-disable-next-line no-console
       .catch(error => console.log('Erro ao carregar mais posts', error));
@@ -75,8 +88,9 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
   return (
     <>
       <Head>
-        <title>Home</title>
+        <title>Home | spacetraveling</title>
       </Head>
+
       <Header />
       <main className={commonStyles.container}>
         <div className={styles.content}>
@@ -109,7 +123,7 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
               className={styles.load}
               onClick={handleLoadPosts}
             >
-              <strong>carregar mais posts</strong>
+              <strong>Carregar mais posts</strong>
             </button>
           )}
         </div>
@@ -132,13 +146,7 @@ export const getStaticProps: GetStaticProps<HomeProps> = async () => {
     return {
       id: result.id,
       uid: result.uid,
-      first_publication_date: format(
-        new Date(result.first_publication_date),
-        'dd MMM yyyy',
-        {
-          locale: ptBR,
-        }
-      ),
+      first_publication_date: result.first_publication_date,
       data: {
         author: result.data.author,
         subtitle: result.data.subtitle,
