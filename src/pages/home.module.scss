@@ -1,0 +1,71 @@
+// TODO
+.content {
+  height: 108px;
+  width: 720px;
+
+  ul {
+    list-style: none;
+  }
+}
+
+.post {
+
+  a {
+
+    display: block;
+
+    &:hover strong {
+      color: var(--highlight)
+    }
+
+    strong {
+      transition: color 0.2s;
+      font-size: 28px;
+      font-weight: bold;
+      line-height: 33px;
+      color: var(--heading);
+    }
+
+    p {
+      white-space: nowrap;
+      overflow: hidden;
+      font-size: 18px;
+      font-weight: normal;
+      margin-top: 8px;
+      color: var(--body)
+    }
+
+    section {
+      margin-top: 24px;
+      display: flex;
+
+      span {
+        font-size: 12px;
+        color: var(--info);
+        display: flex;
+        align-items: center;
+
+        & + span {
+          margin-left: 24px;
+        }
+      }
+
+      svg {
+        margin-right: 8px;
+      }
+    }
+  }
+
+  & + li {
+    margin-top: 48px;
+  }
+}
+
+.load {
+  margin-top: 64px;
+  border: 0;
+  background: none;
+  color: var(--highlight);
+  font-weight: 600;
+  font-size: 18px;
+}
